@@ -1,0 +1,6 @@
+insert_phone        tag reviews and insert them into database
+insert_phone_pos    extract noun words with position
+fetures		    Apriori algorithm to extract frequent pattern
+feture_filter	    filters useless features and input the results into database
+sentiments          analyze sentiments of sentences and each feature   
+

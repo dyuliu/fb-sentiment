@@ -1,0 +1,146 @@
+Python 2.7.6 (default, Mar 22 2014, 22:59:56) 
+[GCC 4.8.2] on liudy, Standard
+>>> 5000
+10000
+15000
+20000
+25000
+30000
+35000
+40000
+45000
+50000
+55000
+60000
+65000
+70000
+75000
+sentences sentiment judging
+0
+5000
+10000
+15000
+20000
+25000
+30000
+35000
+40000
+45000
+50000
+55000
+60000
+65000
+70000
+75000
+total positive: 53183
+total negative: 16304
+total neutral: 9443
+sentiment based on feature
+item p: 1099 n: 471
+reception p: 2209 n: 876
+something p: 988 n: 550
+charge p: 1246 n: 601
+unit p: 1371 n: 594
+nokia p: 1275 n: 411
+years p: 449 n: 216
+end p: 530 n: 410
+reviews p: 762 n: 552
+hours p: 397 n: 257
+piece p: 718 n: 862
+year p: 369 n: 208
+clip p: 882 n: 708
+noise p: 300 n: 3017
+pocket p: 546 n: 268
+headsets p: 779 n: 371
+feature p: 1519 n: 394
+buttons p: 778 n: 449
+excellent p: 4053 n: 75
+side p: 606 n: 359
+design p: 1361 n: 686
+person p: 495 n: 309
+work p: 9426 n: 2019
+things p: 908 n: 433
+software p: 902 n: 489
+razr p: 833 n: 281
+weeks p: 188 n: 198
+replacement p: 500 n: 262
+size p: 1021 n: 237
+speaker p: 835 n: 359
+couple p: 240 n: 275
+month p: 244 n: 180
+minutes p: 542 n: 235
+week p: 236 n: 202
+anything p: 488 n: 390
+fit p: 2375 n: 680
+anyone p: 855 n: 263
+usb p: 500 n: 203
+others p: 709 n: 350
+number p: 429 n: 299
+customer p: 758 n: 503
+card p: 562 n: 246
+computer p: 473 n: 192
+power p: 475 n: 343
+verizon p: 673 n: 429
+part p: 634 n: 388
+home p: 523 n: 110
+earpiece p: 661 n: 392
+etc p: 389 n: 185
+pictures p: 899 n: 206
+fact p: 673 n: 217
+nothing p: 496 n: 643
+reason p: 213 n: 221
+player p: 729 n: 166
+belt p: 518 n: 371
+plantronics p: 650 n: 205
+stars p: 188 n: 85
+model p: 412 n: 235
+wireless p: 560 n: 173
+connection p: 459 n: 598
+treo p: 813 n: 286
+everything p: 918 n: 198
+phone p: 16357 n: 6623
+battery p: 4287 n: 2539
+time p: 2397 n: 2025
+product p: 6356 n: 1626
+quality p: 6453 n: 1737
+headset p: 5580 n: 1686
+sound p: 5514 n: 1398
+price p: 3962 n: 545
+bluetooth p: 3586 n: 1032
+ear p: 3011 n: 1752
+case p: 3370 n: 1115
+cell p: 1879 n: 673
+phones p: 2340 n: 864
+motorola p: 1970 n: 864
+problem p: 1218 n: 6345
+cell p: 3717 n: 1136
+people p: 1743 n: 1301
+way p: 1786 n: 721
+thing p: 1992 n: 1157
+charger p: 1801 n: 839
+works p: 14470 n: 265
+car p: 1281 n: 550
+life p: 2266 n: 734
+use p: 6752 n: 2006
+screen p: 2215 n: 974
+sound p: 4197 n: 1005
+call p: 1345 n: 1016
+service p: 2007 n: 926
+camera p: 2297 n: 657
+problems p: 780 n: 4599
+volume p: 1503 n: 881
+day p: 701 n: 461
+fine p: 5437 n: 98
+days p: 548 n: 317
+months p: 490 n: 436
+calls p: 1170 n: 990
+battery p: 2576 n: 1002
+device p: 1864 n: 603
+lot p: 1106 n: 730
+features p: 2231 n: 279
+button p: 847 n: 661
+voice p: 1479 n: 534
+times p: 490 n: 556
+money p: 962 n: 1150
+amazon p: 1004 n: 489
+bit p: 664 n: 1449
