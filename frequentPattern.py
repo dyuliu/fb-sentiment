@@ -124,7 +124,7 @@ def printResults(items, rules):
         print "Rule: %s ==> %s , %.3f" % (str(pre), str(post), confidence)
 
 
-def dataFromFile():
+def dataFromFile(items):
         """Function which reads from the file and yields a generator"""
         num = 0
         for item in items:
@@ -134,14 +134,9 @@ def dataFromFile():
                 #   break
                 yield record
 
-'''   for line in file_iter:
-            line = line.strip().rstrip(',')                        
-            record = frozenset(line.split(','))
-            yield record'''
 
-
-
-if __name__ == "__main__":
+def frequentPattern():
+    '''Extract frequent pattern from reviews in the specific database'''
 
     client = MongoClient('localhost',  27017)
     db = client.amazon
@@ -149,7 +144,7 @@ if __name__ == "__main__":
     icol = db.co_occurence
     items = col.find()    
     
-    inFile = dataFromFile()
+    inFile = dataFromFile(items)
 
     minSupport = 0.01
     minConfidence = 0.6

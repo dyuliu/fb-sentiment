@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from tagging import getTag
 
-def insert_phone_tag(productName,  complete):
+def insert_tag(productName,  complete):
     client = MongoClient('localhost',  27017)
     db = client.amazon
     col = db.phone
@@ -26,8 +26,8 @@ def insert_phone_tag(productName,  complete):
 
 
 #insert_phone_tag('B0007WWAGI' ,  0)
-insert_phone_tag('B0009B0IX4' ,  0)
-insert_phone_tag('B000CQXHOS' ,  0)
-insert_phone_tag('B000GAO9T2' ,  0)
-insert_phone_tag('B000NKCO5Q' ,  0)
-insert_phone_tag('B000RUPEOA' ,  0)
+insert_tag('B0009B0IX4' ,  0)
+insert_tag('B000CQXHOS' ,  0)
+insert_tag('B000GAO9T2' ,  0)
+insert_tag('B000NKCO5Q' ,  0)
+insert_tag('B000RUPEOA' ,  0)

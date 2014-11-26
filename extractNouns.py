@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from tagging import getTag
 
-if __name__ == "__main__":
+def extractNouns():
     client = MongoClient('localhost',  27017)
     db = client.amazon
     col = db.phone_tag

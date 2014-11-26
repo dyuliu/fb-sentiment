@@ -15,15 +15,17 @@ if __name__ == "__main__":
     
    #col.aggregate([{$group : {_id : "$product/productId", num : {$sum : 1}}}])
     
-    
-    
     items = list(col.aggregate({"$group": {"_id": '$product/productId',  "num": {"$sum":  1}}})['result'])
+    
+    
+    #items = list(col.aggregate({"$group": {"_id": '$product/productId',  "num": {"$sum":  1}}})['result'])
     #print items    
     items.sort(cmp = mycmp)
     inum =0
     for item in items:
+        item['title'] = col.find_one({'product/productId': item['_id']})['product/title']
         print item
-        if (inum > 20):
+        if (inum > 100):
             break
         inum += 1
     print len(items)
