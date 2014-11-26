@@ -1,6 +1,16 @@
-insertTag.py                        tag reviews and insert them into database
-extractNouns.py                 extract noun words with position
-frequentPattern.py		       Apriori algorithm to extract frequent pattern
-fetureFilter.py	                   filters useless features and input the results into database
-sentiments.py                          analyze sentiments of sentences and each feature   
+Course Code: COMP 5331, Fall 2014
+Course Title: Knowledge Discovery and Data Mining
+
+Final Project
+
+Compareview: Visual Analysis of Customer Reviews
+
+Author:
+Dongyu Liu
+Yanhong Wu
+
+
+
+
+run main.py to initialize 
 

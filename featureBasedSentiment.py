@@ -1,11 +1,11 @@
-from pymongo import MongoClient
+from operateDB import connectDB
 from bson.objectid import ObjectId 
 from tagging import getTag
 
 def loadSet():
-    file_pos = open('positive-words.txt', 'rU')
-    file_neg = open('negative-words.txt', 'rU')
-    file_nav = open('negation-words.txt', 'rU')
+    file_pos = open('wordstat/positive-words.txt', 'rU')
+    file_neg = open('wordstat/negative-words.txt', 'rU')
+    file_nav = open('wordstat/negation-words.txt', 'rU')
     
     global positives
     global negatives
@@ -49,8 +49,8 @@ def getNeighbour(sentence,  position,  ran=3):
 def find_negation_word(neighbour):
     for i in neighbour:
         if i[0] in negations:
-            return True
-    return False
+            return True,  i[0]
+    return False,  i[0]
     
 def judge(sentence):
     posemo = 0
@@ -60,7 +60,7 @@ def judge(sentence):
     for word in sentence['text']:
             word = word[0]
             neighbour = getNeighbour(sentence['text'],  position,  3)
-            negOrient = find_negation_word(neighbour)
+            negOrient = find_negation_word(neighbour)[0]
             position += 1
             if word in positives:
                 if negOrient:
@@ -80,16 +80,16 @@ def Sentiment_Judge(sentences):
     num = 0
     for i in sentences:
         sentiments.append(judge(i))
-        #print sentiments[num]
         if sentiments[num]['sentiment']<0:
             totneg += 1
         elif sentiments[num]['sentiment']>0:
             totpos += 1
         elif (sentiments[num]['sentiment']==0):
             totmid += 1
-        #if ( num % 5000 == 0):
-        #    print num
         num +=1
+    finalResult['psentences'] = totpos
+    finalResult['nsentences'] = totneg
+    finalResult['msentences'] = totmid
  
 def isSub(sub, sup):
     if (sup.issuperset(sub)):
@@ -111,6 +111,8 @@ def Calc_feature(feature,  sentence,  snum):
         rightp = -1
         tpositive = 0
         tnegative = 0
+        posAdj = []
+        negAdj = []
         posfnum = [0]*len(feature)
         negfnum = [0]*len(feature)
         for w in sentence['text']:
@@ -143,32 +145,45 @@ def Calc_feature(feature,  sentence,  snum):
                     word = w[0]
                     if (word in positives):
                         neighbour = getNeighbour(sentence['text'],  wpos,  3)
-                        if (find_negation_word(neighbour)):
+                        negationword = find_negation_word(neighbour)
+                        if (negationword[0]):
                             tnegative += 1
+                            negAdj.append(negationword[1]+' '+word)
                         else:
                             tpositive += 1
+                            posAdj.append(word)
                     elif (word in negatives):
                         neighbour = getNeighbour(sentence['text'],  wpos,  3)
-                        if (find_negation_word(neighbour)):
+                        negationword = find_negation_word(neighbour)
+                        if (negationword[0]):
                             tpositive += 1
+                            posAdj.append(negationword[1]+' '+word)
                         else:
                             tnegative += 1
+                            negAdj.append(word)
 
             wpos += 1       
         
-        return tpositive - tnegative,  tpositive,  tnegative,  min(posfnum),  min(negfnum)
+        return tpositive - tnegative,  tpositive,  tnegative,  min(posfnum),  min(negfnum),  posAdj,  negAdj,  True
     
-    return 0, 0, 0, 0, 0  
+    return 0, 0, 0, 0, 0, [], [], False
     
 def Feature_Judge(sentences):
-    global features
+    global sentiments,  features,  featureVis,  finalResult
     
     for f in features:
-        f.append({'pnum':0,  'nnum':0,  'positive_set':set(),  'negative_set':set(),  'pval':0,  'nval':0,  'negfnum':0,  'posfnum':0})
+        f.append({'pnum':0,  'nnum':0,  'positive_set':set(),  'negative_set':set(),  'pval':0,  'nval':0,  'negfnum':0,  'posfnum':0,  'posAdj':[],  'negAdj':[]})
        # print f
+
+    def listtostr(feature):
+        s = ''
+        for f in feature:
+            s = s + ' ' +f
+        return s[1:]
 
     snum =0
     for s in sentences:
+        featureVis.append({'reviewID': s['_id'],  'score': s['score'],  'sentiment':sentiments[snum]['sentiment'],'pnum':sentiments[snum]['positive'], 'nnum':sentiments[snum]['negative'], 'features':[]})
         for f in features:
             pon = Calc_feature(f[0],  s,  snum)
             if (pon[0] > 0):
@@ -181,82 +196,68 @@ def Feature_Judge(sentences):
             f[3]['nval'] += pon[2]
             f[3]['posfnum'] += pon[3]
             f[3]['negfnum'] += pon[4]
-        snum += 1
+            #f[3]['posAdj'] += pon[5]
+            #f[3]['negAdj'] += pon[6]
+            if pon[7]:
+                featureVis[snum]['features'].append({listtostr(f[0]):  {'pos':pon[1],  'neg':pon[2]}})
         
-def SentimentOfFeature(productName):
+        snum += 1
     
-    result = {}
-    
-    client = MongoClient('localhost',  27017)
-    db = client.amazon
-    str_col = 'phone_tag_'+ productName
-    col = db[str_col]
-    
-    global positives,  negatives,  negations
-    positives = set()
-    negatives = set()
-    negations = set()
-    loadSet()
-    
-    global sentences, sentences_set
-    sentences = col.find()
-    print 'Total number of reviews: ' + str(sentences.count())
-    myget = getSentences(sentences)
-    sentences = myget[0]
-    sentences_set = myget[1]
-    
-    global sentiments
-    sentiments = []
-    fcol = db.phone_features
-    iter_features = fcol.find()
-    
-    global features
-    features = []
-    for f in iter_features:
-        features.append(f['feature'])
-     
-    global totpos,  totneg,  totmid
-    totpos = 0  
-    totneg = 0 
-    totmid = 0 
-    print "sentences sentiment judging"
-    Sentiment_Judge(sentences)
-
-    result['psentences'] = totpos
-    result['nsentences'] = totneg
-    result['msentences'] = totmid
-
-    print "sentiment based on feature"
-    Feature_Judge(sentences)
     feature_info = []
     for f in features:
         #print str(f[0]) + str(f[3]['pnum']) + str(f[3]['nnum'])
-        if (1.0*(f[3]['pnum'] + f[3]['nnum'])/len(sentences))>0.02:
-           feature_info.append({'feature':f[0],  'support':f[2],  'positive_review_Num':f[3]['pnum'],  'negative_review_Num':f[3]['nnum'],  'positiveVal':f[3]['pval'],  'negativeVal':f[3]['nval'],  'posNum':f[3]['posfnum'],'negNum':f[3]['negfnum']})
+        if (1.0*(f[3]['pnum'] + f[3]['nnum'])/len(sentences))>0.05:
+           feature_info.append({'feature':f[0],  'support':f[2],  'positive_review_Num':f[3]['pnum'],  'negative_review_Num':f[3]['nnum'],  'positiveVal':f[3]['pval'],  'negativeVal':f[3]['nval'],  'posNum':f[3]['posfnum'],'negNum':f[3]['negfnum'], 'posAdj':f[3]['posAdj'], 'negAdj':f[3]['negAdj']})
 
     def mycmp(a, b):
         if (a['support']<b['support']):
             return 1;
         else:
-            return -1;
-            
+            return -1;            
     feature_info.sort(cmp = mycmp)
+    finalResult['featureInfo'] = feature_info
+    finalResult['featureVis'] = featureVis
+
+def initialization(productId,  oriDB,  oriCol,   featureDB,  featureCol):
+    global positives,  negatives,  negations,  sentences,  sentences_set, sentiments,  features,  totpos,  totneg,  totmid,  finalResult, featureVis,  iCol
+    oCol = connectDB(oriDB,  oriCol)['col']
+    iCol = connectDB('amazon_phone',  'visData')['col']
+    totpos = 0  
+    totneg = 0 
+    totmid = 0 
+    sentiments = []
+    features = []
+    featureVis = []
+    finalResult = {}
+    positives = set()
+    negatives = set()
+    negations = set()
+    loadSet()
+    sentences = oCol.find({'productId': productId})
+    print 'Total number of reviews: ' + str(sentences.count())
+    myget = getSentences(sentences)
+    sentences = myget[0]
+    sentences_set = myget[1]
     
-    result['featureInfo'] = feature_info
-    return result
+    fCol = connectDB(featureDB,  featureCol)['col']
+    iter_features = fCol.find()
+    
+    for f in iter_features:
+        features.append(f['feature'])
 
 
-'''
-#print SentimentOfFeature('B000NKCO5Q')['featureInfo'][0]
-iclient = MongoClient('localhost',  27017)
-idb = iclient.amazon
-icol = idb.phone_vis
+def SentimentOfFeature(productId,  oriDB='amazon_phone',  oriCol='headsetsTagged',  insertDB='amazon_phone',  insertCol='visData',  featureDB='amazon_phone',  featureCol='features'):
+    initialization(productId,  oriDB,  oriCol,  featureDB,  featureCol)
+    #print "sentences sentiment judging"
+    Sentiment_Judge(sentences)
+    #print "sentiment based on feature"
+    Feature_Judge(sentences)
+    iCol = connectDB('amazon_phone',  'visData')['col']
+    res = {'psentences':finalResult['psentences'], 'nsentences':finalResult['nsentences'],  'msentences':finalResult['msentences'],
+    'productName': productId,  'featureInfo':finalResult['featureInfo'],  'featureVis':finalResult['featureVis']}
+    iCol.insert(res)
+    return finalResult
 
-productSet = ['B0007WWAGI',  'B0009B0IX4', 'B000CQXHOS', 'B000GAO9T2', 'B000NKCO5Q', 'B000RUPEOA']
-#productSet = ['B000NKCO5Q']
-for productName in productSet:
-    data = SentimentOfFeature(productName)
-    res = {'psentences':data['psentences'], 'nsentences':data['nsentences'],  'msentences':data['msentences'],
-        'productName': productName,  'featureInfo':data['featureInfo']}
-    icol.insert(res)
-'''  
+
+
+

@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from tagging import getTag
 
 def mycmp(a, b):
-    if (a['num']<b['num']):
+    if (a['num']>b['num']):
         return 1
     else:
         return -1    
@@ -22,14 +22,17 @@ if __name__ == "__main__":
     #print items    
     items.sort(cmp = mycmp)
     inum =0
+    f = open('itemlist.txt',  'w+')
     for item in items:
         item['title'] = col.find_one({'product/productId': item['_id']})['product/title']
-        print item
-        if (inum > 100):
+        f.write(str(item)+'\n')
+        #print str(item)
+        if (inum > 1000):
             break
         inum += 1
-    print len(items)
-    
+    f.write(str(len(items))+'\n')
+   # print len(items)
+    f.close()
     '''
     print ''
     inum = 0

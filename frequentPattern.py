@@ -12,7 +12,7 @@ import sys
 from itertools import chain, combinations
 from collections import defaultdict
 from optparse import OptionParser
-from pymongo import MongoClient
+from operateDB import connectDB
 
 
 def subsets(arr):
@@ -126,32 +126,23 @@ def printResults(items, rules):
 
 def dataFromFile(items):
         """Function which reads from the file and yields a generator"""
-        num = 0
         for item in items:
                 record = frozenset(item['noun'])
-                num += 1
-                #if (num >100):
-                #   break
                 yield record
 
 
-def frequentPattern():
+def frequentPattern(oriDB,  oriCol,  insertDB,  insertCol,  minSupport=0.03,  minConfidence=0.8):
     '''Extract frequent pattern from reviews in the specific database'''
-
-    client = MongoClient('localhost',  27017)
-    db = client.amazon
-    col = db.phone_only_pos
-    icol = db.co_occurence
-    items = col.find()    
-    
+    oCol = connectDB(oriDB,  oriCol)['col']
+    iCol = connectDB(insertDB,  insertCol)['col']
+    items = oCol.find()        
     inFile = dataFromFile(items)
 
-    minSupport = 0.01
-    minConfidence = 0.6
     items, rules = runApriori(inFile, minSupport, minConfidence)
 
     print len(items)
     #printResults(items, rules)
-    
-    tmp_item = {"items":items,  "rules":rules}
-    icol.insert(tmp_item)
+
+    iCol.insert({"items":items,  "rules":rules,  "minSupport":minSupport})
+    return {"items":items,  "rules":rules,  "minSupport":minSupport}
+   
