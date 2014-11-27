@@ -196,8 +196,8 @@ def Feature_Judge(sentences):
             f[3]['nval'] += pon[2]
             f[3]['posfnum'] += pon[3]
             f[3]['negfnum'] += pon[4]
-            #f[3]['posAdj'] += pon[5]
-            #f[3]['negAdj'] += pon[6]
+            f[3]['posAdj'] += pon[5]
+            f[3]['negAdj'] += pon[6]
             if pon[7]:
                 featureVis[snum]['features'].append({listtostr(f[0]):  {'pos':pon[1],  'neg':pon[2]}})
         
