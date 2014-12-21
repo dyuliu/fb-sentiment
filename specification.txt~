@@ -1,0 +1,18 @@
+Course Code: COMP 5331, Fall 2014
+Course Title: Knowledge Discovery and Data Mining
+
+Final Project
+
+Compareview: Visual Analysis of Customer Reviews
+
+Author:
+Dongyu Liu
+Yanhong Wu
+
+
+
+we use the data "phone.json" from amazon  (http://snap.stanford.edu/data/web-Amazon.html)
+firstly put phone.json into mongoDB with(db=amazon, collection=phone)
+
+run main.py once time 
+

@@ -172,7 +172,7 @@ def Feature_Judge(sentences):
     global sentiments,  features,  featureVis,  finalResult
     
     for f in features:
-        f.append({'pnum':0,  'nnum':0,  'positive_set':set(),  'negative_set':set(),  'pval':0,  'nval':0,  'negfnum':0,  'posfnum':0,  'posAdj':[],  'negAdj':[]})
+        f.append({'pnum':0,  'nnum':0,  'positive_set':set(),  'negative_set':set(),  'pval':0,  'nval':0,  'negfnum':0,  'posfnum':0,  'posAdj':[],  'negAdj':[], 'numReviewContainF':0})
        # print f
 
     def listtostr(feature):
@@ -199,6 +199,7 @@ def Feature_Judge(sentences):
             f[3]['posAdj'] += pon[5]
             f[3]['negAdj'] += pon[6]
             if pon[7]:
+                f[3]['numReviewContainF'] += 1 
                 featureVis[snum]['features'].append({listtostr(f[0]):  {'pos':pon[1],  'neg':pon[2]}})
         
         snum += 1
@@ -206,7 +207,8 @@ def Feature_Judge(sentences):
     feature_info = []
     for f in features:
         #print str(f[0]) + str(f[3]['pnum']) + str(f[3]['nnum'])
-        if (1.0*(f[3]['pnum'] + f[3]['nnum'])/len(sentences))>0.05:
+        #if (1.0*(f[3]['pnum'] + f[3]['nnum'])/len(sentences))>0.05:
+        if (1.0*(f[3]['pnum'] + f[3]['nnum'])/f[3]['numReviewContainF'])>0.5:
            feature_info.append({'feature':f[0],  'support':f[2],  'positive_review_Num':f[3]['pnum'],  'negative_review_Num':f[3]['nnum'],  'positiveVal':f[3]['pval'],  'negativeVal':f[3]['nval'],  'posNum':f[3]['posfnum'],'negNum':f[3]['negfnum'], 'posAdj':f[3]['posAdj'], 'negAdj':f[3]['negAdj']})
 
     def mycmp(a, b):
@@ -257,7 +259,6 @@ def SentimentOfFeature(productId,  oriDB='amazon_phone',  oriCol='headsetsTagged
     'productName': productId,  'featureInfo':finalResult['featureInfo'],  'featureVis':finalResult['featureVis']}
     iCol.insert(res)
     return finalResult
-
 
 
 

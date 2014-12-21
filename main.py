@@ -2,7 +2,7 @@ from operateDB import *
 from frequentPattern import frequentPattern
 from featureFilter import featureFilter
 from featureBasedSentiment import SentimentOfFeature
-'''
+
 IDSet = ['B0009B0IX4', 'B0007WWAGI',  'B000GAO9T2',  'B000CQXHOS',  'B000RUPEOA',  'B000PCCLPU',  'B0006GFARG',  'B000EM0WGG',  'B000CORUSO',  'B0009W8DLC',  'B000GAZPZE',  'B00001W0EQ', 
 'B0009W8DKI',  'B000GX9D9K',  'B000HBIUNG',  'B000BBE9C8',  'B000BD3210',  'B000EF3D4G',  'B00006ZCDS',  'B000GM8QI0',  'B0007W1K3C',  'B000BHAUSE',  'B0006BBHJ6',  'B00004W6Y6',  'B000H3Z2K8', 
 'B0000B35K8', 'B000CQFMEQ' , 'B000FOKF42',  'B000R4J56O',  'B000GM50DO',  'B000BT4BRS',  'B000E9ZO8A',  'B000FL2E4Y',  'B000NGWKI6',  'B000O3EU0O',  'B000IBKVR8',  'B00004WIO4',  'B000H6QSNK', 
@@ -29,8 +29,7 @@ frequentPattern('amazon_phone',  'headsetsNouns',  'amazon_phone',  'co-orcurren
 
 # featureFilter(oriDB,  oriCol,  insertDB,  insertCol,  minSupport=0.03): 
 print 'filtering features'
-featureFilter('amazon_phone',  'headsetsNouns',  'amazon_phone',  'featuresManual',  0.03)
-'''
+featureFilter('amazon_phone',  'headsetsNouns',  'amazon_phone',  'features',  0.03)
 
 
 
@@ -41,5 +40,6 @@ IDSet = ['B0009B0IX4', 'B0007WWAGI',  'B000GAO9T2',  'B000CQXHOS',  'B000RUPEOA'
 print 'Calculating Sentiment of each feature & sentence'
 for id in IDSet:
     print id
-    SentimentOfFeature(id)
+    print len(SentimentOfFeature(id)['featureInfo'])
+#see mongoDB:    amazon_phone.visData
 

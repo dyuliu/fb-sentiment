@@ -10,7 +10,20 @@ Dongyu Liu
 Yanhong Wu
 
 
+to run the code , you must install   mongoDB and some required python packages first(reference requirements.txt please).
 
+we use the data "Cell_Phones_&_Accessories.txt.gz Cell Phone reviews (78,930 reviews) 20M" from amazon  (http://snap.stanford.edu/data/web-Amazon.html)
 
-run main.py to initialize 
+Step1: (run the following instruction in the terminal to import data into mongoDB)
+mongoimport --db amazon --collection phone --file phone.json
 
+Step2: (run "main.py",    open main.py and see it, you may understand what actually being done)
+python main.py
+//   !tagging reviews process may take ten more minutes 
+
+Step3: (export the visData from mongoDB to the websites data file) 
+mongoexport --db amazon_phone --collection visData --out ./templates/data/earphone.json
+
+Step4: (run the server)
+./templates/start.sh
+then enter the website 127.0.0.1:8888    to see the final result
