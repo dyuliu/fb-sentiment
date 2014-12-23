@@ -12,7 +12,7 @@ def extractReviews(IDSet,  oriDB,  oriCol,  insertDB,  insertCol):
     oCol = connectDB(oriDB,  oriCol)['col']
     iCol = connectDB(insertDB,  insertCol)['col']
     for id in IDSet:
-        items = oCol.find({'product/productId': id})
+        items = oCol.find({'business_id': id})
         for item in items:
             iCol.insert(item)
           
@@ -24,7 +24,7 @@ def reviewTagged(oriDB,  oriCol,  insertDB,  insertCol):
     items = oCol.find()
     print items.count()
     for item in items:
-        iCol.insert({"_id": item['_id'], "productId":item['product/productId'], "score":item['review/score'], "text": getTag(item['review/text'])})
+        iCol.insert({"_id": item['_id'], "business_id":item['business_id'], "score":item['stars'], "text": getTag(item['text'])})
             
 def extractNouns(oriDB,  oriCol,  insertDB,  insertCol):
     oCol = connectDB(oriDB,  oriCol)['col']

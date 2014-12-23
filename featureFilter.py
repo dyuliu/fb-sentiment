@@ -67,7 +67,7 @@ def initialization(oriDB,  oriCol,  insertDB,  insertCol,  minSupport):
     global oCol,  iCol,  tCol,  items,  item,  itemlist,  final
     oCol = connectDB(oriDB,  oriCol)['col']
     iCol = connectDB(insertDB,  insertCol)['col']
-    tCol = connectDB('amazon_phone',  'co-orcurrence')['col']
+    tCol = connectDB(oriDB,  'co-orcurrence')['col']
     item = tCol.find_one({"minSupport": minSupport})['items']
     items = oCol.find()
     itemlist = []

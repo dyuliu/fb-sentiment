@@ -206,7 +206,9 @@ def Feature_Judge(sentences):
     
     feature_info = []
     for f in features:
-        #print str(f[0]) + str(f[3]['pnum']) + str(f[3]['nnum'])
+        if (f[3]['numReviewContainF'] == 0):
+            continue;
+        #print str(f[0]) + str(f[3]['pnum']) + '  ' + str(f[3]['nnum'])
         #if (1.0*(f[3]['pnum'] + f[3]['nnum'])/len(sentences))>0.05:
         if (1.0*(f[3]['pnum'] + f[3]['nnum'])/f[3]['numReviewContainF'])>0.5:
            feature_info.append({'feature':f[0],  'support':f[2],  'positive_review_Num':f[3]['pnum'],  'negative_review_Num':f[3]['nnum'],  'positiveVal':f[3]['pval'],  'negativeVal':f[3]['nval'],  'posNum':f[3]['posfnum'],'negNum':f[3]['negfnum'], 'posAdj':f[3]['posAdj'], 'negAdj':f[3]['negAdj']})
@@ -223,7 +225,6 @@ def Feature_Judge(sentences):
 def initialization(productId,  oriDB,  oriCol,   featureDB,  featureCol):
     global positives,  negatives,  negations,  sentences,  sentences_set, sentiments,  features,  totpos,  totneg,  totmid,  finalResult, featureVis,  iCol
     oCol = connectDB(oriDB,  oriCol)['col']
-    iCol = connectDB('amazon_phone',  'visData')['col']
     totpos = 0  
     totneg = 0 
     totmid = 0 
@@ -235,7 +236,7 @@ def initialization(productId,  oriDB,  oriCol,   featureDB,  featureCol):
     negatives = set()
     negations = set()
     loadSet()
-    sentences = oCol.find({'productId': productId})
+    sentences = oCol.find({'business_id': productId})
     print 'Total number of reviews: ' + str(sentences.count())
     myget = getSentences(sentences)
     sentences = myget[0]
@@ -248,13 +249,13 @@ def initialization(productId,  oriDB,  oriCol,   featureDB,  featureCol):
         features.append(f['feature'])
 
 
-def SentimentOfFeature(productId,  oriDB='amazon_phone',  oriCol='headsetsTagged',  insertDB='amazon_phone',  insertCol='visData',  featureDB='amazon_phone',  featureCol='features'):
-    initialization(productId,  oriDB,  oriCol,  featureDB,  featureCol)
+def SentimentOfFeature(productId,  oriDB='yelp_food',  oriCol='restaurantTagged',  insertDB='yelp_food',  insertCol='visData',  featureDB='yelp_food',  featureCol='features'):
+    initialization(productId,  oriDB,  oriCol,   featureDB,  featureCol)
     #print "sentences sentiment judging"
     Sentiment_Judge(sentences)
     #print "sentiment based on feature"
     Feature_Judge(sentences)
-    iCol = connectDB('amazon_phone',  'visData')['col']
+    iCol = connectDB(insertDB,  insertCol)['col']
     res = {'psentences':finalResult['psentences'], 'nsentences':finalResult['nsentences'],  'msentences':finalResult['msentences'],
     'productName': productId,  'featureInfo':finalResult['featureInfo'],  'featureVis':finalResult['featureVis']}
     iCol.insert(res)
