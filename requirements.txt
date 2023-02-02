@@ -10,7 +10,7 @@ Twisted-Core==13.2.0
 Twisted-Names==13.2.0
 Twisted-Web==13.2.0
 Unidecode==0.04.16
-Werkzeug==0.9.6
+Werkzeug==0.15.5
 adium-theme-ubuntu==0.3.4
 apt-xapian-index==0.45
 arandr==0.1.7.1
